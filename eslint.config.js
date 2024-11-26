@@ -1,7 +1,12 @@
+// eslint-disable-next-line import/no-unresolved
 import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin';
+// eslint-disable-next-line import/no-unresolved
 import typescriptEslintParser from '@typescript-eslint/parser';
 import importPlugin from 'eslint-plugin-import';
 import jsdocPlugin from 'eslint-plugin-jsdoc';
+import reactPlugin from 'eslint-plugin-react';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import reactNativePlugin from 'eslint-plugin-react-native';
 import globals from 'globals';
 
 const OFF = 'off';
@@ -12,7 +17,7 @@ export default [
   // Base configuration
   {
     files: ['**/*.js', '**/*.jsx'], // Target JavaScript and JSX files
-    ignores: ['node_modules/**', 'dist/**', 'build/**', 'eslint.config.js'], // Ignore common directories
+    ignores: ['node_modules/**', 'dist/**', 'build/**'], // Ignore common directories
     languageOptions: {
       ecmaVersion: 2023, // Enable modern ECMAScript features
       sourceType: 'module', // Use ES modules
@@ -107,6 +112,7 @@ export default [
   // TypeScript-specific configuration
   {
     files: ['**/*.ts', '**/*.tsx'], // Target TypeScript files
+    ignores: ['node_modules/**', 'dist/**', 'build/**'], // Ignore common directories
     languageOptions: {
       parser: typescriptEslintParser, // Use TypeScript parser
       // tsconfigRootDir: __dirname, // Set root directory for TypeScript
@@ -128,15 +134,27 @@ export default [
       '@typescript-eslint/no-shadow': [ERROR],
       '@typescript-eslint/no-use-before-define': [ERROR],
       '@typescript-eslint/no-unused-vars': ERROR,
-      '@typescript-eslint/consistent-type-definitions': [ERROR, 'interface']
+      '@typescript-eslint/consistent-type-definitions': [ERROR, 'interface'],
+      '@typescript-eslint/ban-ts-comment': OFF
     }
   },
 
   // React-specific configuration
   {
     files: ['**/*.jsx', '**/*.tsx'], // Target React files
+    ignores: ['node_modules/**', 'dist/**', 'build/**'], // Ignore common directories
     plugins: {
-      react: 'eslint-plugin-react'
+      react: reactPlugin,
+      'react-hooks': reactHooksPlugin,
+      'react-native': reactNativePlugin
+    },
+    languageOptions: {
+      globals: globals.browser,
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true
+        }
+      }
     },
     rules: {
       // react hooks

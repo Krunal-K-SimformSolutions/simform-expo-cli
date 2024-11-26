@@ -1,9 +1,32 @@
+import { QuestionAnswer } from '@/questions';
+
 export const CspellConfigTemplate = (): string => {
+  const variables = QuestionAnswer.instance;
+
   return `
     {
       "version": "0.2",
       "language": "en",
-      "words": ["ReactNative", "NodeJS", "cspell", "eslint", "lefthook", "Simform"],
+      "words": [
+        "ReactNative",
+        "NodeJS",
+        "cspell",
+        "eslint",
+        "lefthook",
+        "Simform",
+        "prettytable",
+        "ansicolor",
+        "EDITMSG",
+        "Asana",
+        "mobileprovision",
+        "hprof",
+        "jsbundle",
+        "Podfile",
+        "codegen",
+        "xcconfig",
+        "${variables.getProjectName}",
+        "${variables.getProjectNameWithLowerCase}"
+      ],
       "ignorePaths": [
         "node_modules/**",
         "dist/**",

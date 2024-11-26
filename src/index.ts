@@ -1,6 +1,7 @@
-import { logger } from './utils';
+import { logger, Indicators } from './utils';
 import { generateProject } from './GenerateProject';
 import { askQuestions } from './questions';
+import AppConstant from './AppConstant';
 
 export const main = async () => {
   try {
@@ -35,24 +36,25 @@ export const main = async () => {
 
     await askQuestions();
 
-    logger({
-      text: 'Generating Boilerplate, Please wait !',
-      color: 'blueBright',
-      modifiers: 'bold'
-    });
-    await generateProject();
+    await generateProject(Indicators.instance);
 
-    logger({
-      text: '\n 😊 Happy Coding! 👨🏻‍💻',
-      color: 'greenBright',
-      modifiers: 'bold'
-    });
+    Indicators.instance.changeMessage(
+      {
+        text: AppConstant.StringConstants.msgProjectSuccess,
+        color: 'greenBright',
+        modifiers: 'bold'
+      },
+      'succeed'
+    );
   } catch (error) {
-    logger({
-      text: `\n 🫣 Facing Error! (${(error as Error).message})`,
-      color: 'redBright',
-      modifiers: 'bold'
-    });
+    Indicators.instance.changeMessage(
+      {
+        text: AppConstant.StringConstants.msgProjectError((error as Error).message),
+        color: 'redBright',
+        modifiers: 'bold'
+      },
+      'fail'
+    );
   }
 };
 

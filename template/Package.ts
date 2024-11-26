@@ -90,6 +90,9 @@ export const PackageTemplate = (): string => {
         ${isEsLint ? `"eslint": "^9.15.0",` : ''}
         ${isEsLint ? `"eslint-plugin-import": "^2.31.0",` : ''}
         ${isEsLint ? `"eslint-plugin-jsdoc": "^50.5.0",` : ''}
+        ${isEsLint ? `"eslint-plugin-react": "^7.37.2",` : ''}
+        ${isEsLint ? `"eslint-plugin-react-hooks": "^5.0.0",` : ''}
+        ${isEsLint ? `"eslint-plugin-react-native": "^4.1.0",` : ''}
         ${isEsLint ? `"globals": "^15.12.0",` : ''}
         ${isLeftHook ? `"lefthook": "^1.8.4",` : ''}
         ${isLeftHook ? `"lint-staged": "^15.2.10",` : ''}

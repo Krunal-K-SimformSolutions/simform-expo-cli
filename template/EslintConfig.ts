@@ -1,9 +1,14 @@
 export const EslintConfigTemplate = (): string => {
   return `
+    // eslint-disable-next-line import/no-unresolved
     import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin';
+    // eslint-disable-next-line import/no-unresolved
     import typescriptEslintParser from '@typescript-eslint/parser';
     import importPlugin from 'eslint-plugin-import';
     import jsdocPlugin from 'eslint-plugin-jsdoc';
+    import reactPlugin from 'eslint-plugin-react';
+    import reactHooksPlugin from 'eslint-plugin-react-hooks';
+    import reactNativePlugin from 'eslint-plugin-react-native';
     import globals from 'globals';
 
     const OFF = 'off';
@@ -138,7 +143,17 @@ export const EslintConfigTemplate = (): string => {
       {
         files: ['**/*.jsx', '**/*.tsx'], // Target React files
         plugins: {
-          react: 'eslint-plugin-react'
+          react: reactPlugin,
+          'react-hooks': reactHooksPlugin,
+          'react-native': reactNativePlugin
+        },
+        languageOptions: {
+          globals: globals.browser,
+          parserOptions: {
+            ecmaFeatures: {
+              jsx: true
+            }
+          }
         },
         rules: {
           // react hooks

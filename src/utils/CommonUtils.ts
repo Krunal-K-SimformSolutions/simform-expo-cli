@@ -314,7 +314,7 @@ export const getDirectorPath = (filePath?: string): string | undefined => {
 export const writeJsxToTsFile = async (filePath: string, jsx: string): Promise<void> => {
   const esLintContents = await formatJsxWithEslint(jsx);
   const prettierContents = await formateJsxWithPrettier(esLintContents);
-  fs.writeFileSync(filePath, prettierContents.trim());
+  return fs.writeFileSync(filePath, prettierContents.trim());
 };
 
 /**
@@ -326,5 +326,5 @@ export const writeJsxToTsFile = async (filePath: string, jsx: string): Promise<v
  */
 export const writeJsxToJsonFile = async (filePath: string, jsx: string): Promise<void> => {
   const jsonContents = formateJsxWithJsonFormatter(jsx);
-  fs.writeFileSync(filePath, jsonContents.trim());
+  return fs.writeFileSync(filePath, jsonContents.trim());
 };

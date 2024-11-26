@@ -1,3 +1,5 @@
+import AppConstant from '@/AppConstant';
+
 export class QuestionAnswer {
   static #instance: QuestionAnswer;
 
@@ -96,7 +98,7 @@ export class QuestionAnswer {
   }
 
   get isReactReduxStateManagement(): boolean {
-    return this.stateManagement === 'ReactRedux';
+    return this.stateManagement === AppConstant.StateManagement.ReactRedux;
   }
 
   set setStateManagement(stateManagement: string) {
@@ -108,7 +110,7 @@ export class QuestionAnswer {
   }
 
   get isReduxSagaStateManagementMiddleware(): boolean {
-    return this.stateManagementMiddleware === 'ReduxSaga';
+    return this.stateManagementMiddleware === AppConstant.StateManagementMiddleware.ReduxSaga;
   }
 
   set setStateManagementMiddleware(stateManagementMiddleware: string) {
@@ -183,8 +185,13 @@ export class QuestionAnswer {
     return this.setupEnv;
   }
 
+  public isSupportProductionEnv(feature: string): boolean {
+    return this.setupEnv.includes(feature) && feature === AppConstant.SetupEnv.Production;
+  }
+
   set setSetupEnv(setupEnv: Array<string>) {
     this.setupEnv = setupEnv;
+    this.setupEnv.push(AppConstant.SetupEnv.Production);
   }
 
   get getSupportSampleBundle(): boolean {
