@@ -1,3 +1,6 @@
+/**
+ *
+ */
 export const BabelConfigTemplate = (): string => {
   return `
     /**
@@ -7,6 +10,12 @@ export const BabelConfigTemplate = (): string => {
       api.cache(true);
       return {
         presets: ['babel-preset-expo'],
+        env: {
+          development: {},
+          production: {
+            plugins: ['transform-remove-console']
+          }
+        }
       };
     };
   `;

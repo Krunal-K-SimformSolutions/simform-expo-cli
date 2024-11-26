@@ -1,3 +1,6 @@
+/**
+ *
+ */
 export const PrettierConfigTemplate = (): string => {
   return `
     {

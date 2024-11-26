@@ -1,7 +1,39 @@
 {
   "version": "0.2",
   "language": "en",
-  "words": ["ReactNative", "NodeJS", "cspell", "eslint", "lefthook", "Simform"],
+  "words": [
+    "ansicolor",
+    "Asana",
+    "codegen",
+    "colour",
+    "cristal",
+    "cspell",
+    "EDITMSG",
+    "eslint",
+    "favourite",
+    "hprof",
+    "jsbundle",
+    "lefthook",
+    "mobileprovision",
+    "netinfo",
+    "NodeJS",
+    "osascript",
+    "Persistor",
+    "Podfile",
+    "pressable",
+    "prettytable",
+    "ReactNative",
+    "Simform",
+    "svgs",
+    "tinygradient",
+    "xcconfig",
+    "अंग्रेज़",
+    "जाएं",
+    "डार्क",
+    "मौजूद",
+    "लाइट",
+    "स्क्रीन"
+  ],
   "ignorePaths": [
     "node_modules/**",
     "dist/**",
@@ -15,13 +47,10 @@
   "dictionaries": ["typescript", "node", "javascript", "html", "css"],
   "overrides": [
     {
-      "filename": "**/*.md",
-      "language": "en-GB",
-      "ignoreWords": ["colour", "favourite"]
-    },
-    {
       "filename": "**/*.json",
-      "ignorePaths": ["*.lock"]
+      "language": "hi",
+      "ignorePaths": ["*.lock"],
+      "ignoreWords": ["colour", "favourite"]
     }
   ],
   "enableFiletypes": [".js", ".ts", ".tsx", ".jsx", ".json", ".md"],

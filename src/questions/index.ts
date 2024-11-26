@@ -1,2 +1,2 @@
-export * from './QuestionAnswer';
-export * from './Questionnaires';
+export * from './QuestionAnswer.js';
+export * from './Questionnaires.js';
