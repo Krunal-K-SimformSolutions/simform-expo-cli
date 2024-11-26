@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-import { main } from './src';
+import { main } from './src/index.js';
 
 //                                                        ##
 //                                                     #####

@@ -1,23 +1,29 @@
 export const EslintConfigTemplate = (): string => {
   return `
-    import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin';
-    import typescriptEslintParser from '@typescript-eslint/parser';
-    import importPlugin from 'eslint-plugin-import';
-    import jsdocPlugin from 'eslint-plugin-jsdoc';
-    import globals from 'globals';
+    const typescriptEslintPlugin = require('@typescript-eslint/eslint-plugin');
+    const typescriptEslintParser = require('@typescript-eslint/parser');
+    const importPlugin = require('eslint-plugin-import');
+    const jsdocPlugin = require('eslint-plugin-jsdoc');
+    const reactPlugin = require('eslint-plugin-react');
+    const reactHooksPlugin = require('eslint-plugin-react-hooks');
+    const reactNativePlugin = require('eslint-plugin-react-native');
+    const globals = require('globals');
 
     const OFF = 'off';
     const WARN = 'warn';
     const ERROR = 'error';
 
-    export default [
+    module.exports = [
       // Base configuration
-      {
-        files: ['**/*.js', '**/*.jsx'], // Target JavaScript and JSX files
+      ({
+        files: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx'], // Target JavaScript and JSX files
         ignores: ['node_modules/**', 'dist/**', 'build/**', 'eslint.config.js'], // Ignore common directories
         languageOptions: {
           ecmaVersion: 2023, // Enable modern ECMAScript features
           sourceType: 'module', // Use ES modules
+          ecmaFeatures: {
+            jsx: true
+          },
           globals: globals.browser
         },
         plugins: {
@@ -105,7 +111,6 @@ export const EslintConfigTemplate = (): string => {
           'import/no-extraneous-dependencies': [ERROR, { devDependencies: true }]
         }
       },
-
       // TypeScript-specific configuration
       {
         files: ['**/*.ts', '**/*.tsx'], // Target TypeScript files
@@ -133,12 +138,30 @@ export const EslintConfigTemplate = (): string => {
           '@typescript-eslint/consistent-type-definitions': [ERROR, 'interface']
         }
       },
-
       // React-specific configuration
       {
         files: ['**/*.jsx', '**/*.tsx'], // Target React files
+        ...reactPlugin.configs.flat.recommended,
         plugins: {
-          react: 'eslint-plugin-react'
+          react: reactPlugin,
+          'react-hooks': reactHooksPlugin,
+          'react-native': reactNativePlugin
+        },
+        settings: {
+          react: {
+            version: 'detect'
+          }
+        },
+        languageOptions: {
+          ...reactPlugin.configs.flat.recommended.languageOptions,
+          globals: globals.browser,
+          parserOptions: {
+            ecmaVersion: 2023,
+            sourceType: 'module',
+            ecmaFeatures: {
+              jsx: true
+            }
+          }
         },
         rules: {
           // react hooks
@@ -172,7 +195,8 @@ export const EslintConfigTemplate = (): string => {
           'react-native/no-color-literals': ERROR,
           'react-native/no-raw-text': ERROR
         }
-      }
+      },
+      reactPlugin.configs.flat['jsx-runtime'])
     ];
   `;
 };

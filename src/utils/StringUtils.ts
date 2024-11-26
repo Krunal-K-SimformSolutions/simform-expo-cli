@@ -1,29 +1,43 @@
-import chalk, { ForegroundColorName, BackgroundColorName, ModifierName } from 'chalk';
+import { ColorType } from '../constants/index.js';
+import chalk, { ChalkInstance } from 'chalk';
+import { GradientFunction } from 'gradient-string';
 
 export interface StringData {
-  modifiers?: ModifierName;
-  color?: ForegroundColorName;
-  background?: BackgroundColorName;
+  modifiers?: ChalkInstance;
+  color?: string;
+  background?: string;
   text: string;
+  gradient?: GradientFunction;
 }
 
-export const stringFormat = ({ modifiers, color, background, text }: StringData): string => {
+export const stringFormat = ({
+  modifiers,
+  color,
+  background,
+  text,
+  gradient
+}: StringData): string => {
+  let chalkStr = '';
+  const newText = gradient ? gradient(text) : text;
   if (modifiers && color && background) {
-    return chalk[modifiers][color][background](text);
+    chalkStr = modifiers.hex(color).bgHex(background)(newText);
   } else if (modifiers && color) {
-    return chalk[modifiers][color](text);
+    chalkStr = modifiers.hex(color)(newText);
   } else if (modifiers && background) {
-    return chalk[modifiers][background](text);
+    chalkStr = modifiers.bgHex(background)(newText);
   } else if (color && background) {
-    return chalk[color][background](text);
+    chalkStr = chalk.hex(color).bgHex(background)(newText);
   } else if (modifiers) {
-    return chalk[modifiers](text);
+    chalkStr = modifiers(newText);
   } else if (color) {
-    return chalk[color](text);
+    chalkStr = chalk.hex(color)(newText);
   } else if (background) {
-    return chalk[background](text);
+    chalkStr = chalk.bgHex(background)(newText);
+  } else {
+    chalkStr = newText;
   }
-  return chalk.white(text);
+
+  return chalkStr;
 };
 
 export const stringBuilder = (data: StringData | Array<StringData>): string => {
@@ -34,6 +48,21 @@ export const stringBuilder = (data: StringData | Array<StringData>): string => {
   }
 };
 
-export const questionBuilder = (questionText: string, helpText?: string): string => {
-  return `${stringBuilder({ text: questionText, color: 'yellowBright' })}\n${stringBuilder({ text: helpText ?? '', color: 'blueBright', modifiers: 'dim' })}\n`;
+export const questionBuilder = (
+  colors: ColorType,
+  questionText: string,
+  helpText?: string
+): string => {
+  const list: Array<string> = [];
+  if ((questionText?.length ?? 0) > 0) {
+    list.push(
+      stringBuilder({ text: questionText, color: colors.question, modifiers: chalk.italic.bold })
+    );
+  }
+  if ((helpText?.length ?? 0) > 0) {
+    list.push(
+      stringBuilder({ text: helpText ?? '', color: colors.help, modifiers: chalk.italic.dim })
+    );
+  }
+  return `${list.join('\n')}\n`;
 };

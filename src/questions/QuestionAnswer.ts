@@ -1,6 +1,11 @@
+import { AppConstant } from '../constants/index.js';
+
+type ObjectValueAsAType<T> = T[keyof T];
+
 export class QuestionAnswer {
   static #instance: QuestionAnswer;
 
+  private packageManager: string = '';
   private projectName: string = '';
   private bundleIdentifier: string = '';
   private minAndroidSdkVersion: number = 0;
@@ -29,6 +34,20 @@ export class QuestionAnswer {
     }
 
     return QuestionAnswer.#instance;
+  }
+
+  get getPackageManager(): string {
+    return this.packageManager;
+  }
+
+  public isSupportPackageManager(
+    packageMng: ObjectValueAsAType<typeof AppConstant.PackageManager>
+  ): boolean {
+    return this.packageManager === packageMng;
+  }
+
+  set setPackageManager(packageManager: string) {
+    this.packageManager = packageManager;
   }
 
   get getProjectName(): string {
@@ -95,8 +114,10 @@ export class QuestionAnswer {
     return this.stateManagement;
   }
 
-  get isReactReduxStateManagement(): boolean {
-    return this.stateManagement === 'ReactRedux';
+  public isSupportStateManagement(
+    states: ObjectValueAsAType<typeof AppConstant.StateManagement>
+  ): boolean {
+    return this.stateManagement === states;
   }
 
   set setStateManagement(stateManagement: string) {
@@ -107,8 +128,10 @@ export class QuestionAnswer {
     return this.stateManagementMiddleware;
   }
 
-  get isReduxSagaStateManagementMiddleware(): boolean {
-    return this.stateManagementMiddleware === 'ReduxSaga';
+  public isSupportStateManagementMiddleware(
+    middleware: ObjectValueAsAType<typeof AppConstant.StateManagementMiddleware>
+  ): boolean {
+    return this.stateManagementMiddleware === middleware;
   }
 
   set setStateManagementMiddleware(stateManagementMiddleware: string) {
@@ -119,7 +142,9 @@ export class QuestionAnswer {
     return this.apiMiddleware;
   }
 
-  public isSupportApiMiddleware(middleware: string): boolean {
+  public isSupportApiMiddleware(
+    middleware: ObjectValueAsAType<typeof AppConstant.ApiMiddleware>
+  ): boolean {
     return this.apiMiddleware.includes(middleware);
   }
 
@@ -139,7 +164,7 @@ export class QuestionAnswer {
     return this.addFeatures;
   }
 
-  public isSupportFeature(feature: string): boolean {
+  public isSupportFeature(feature: ObjectValueAsAType<typeof AppConstant.AddFeature>): boolean {
     return this.addFeatures.includes(feature);
   }
 
@@ -183,8 +208,13 @@ export class QuestionAnswer {
     return this.setupEnv;
   }
 
+  public isSupportProductionEnv(feature: ObjectValueAsAType<typeof AppConstant.SetupEnv>): boolean {
+    return this.setupEnv.includes(feature) && feature === AppConstant.SetupEnv.Production;
+  }
+
   set setSetupEnv(setupEnv: Array<string>) {
     this.setupEnv = setupEnv;
+    this.setupEnv.push(AppConstant.SetupEnv.Production);
   }
 
   get getSupportSampleBundle(): boolean {

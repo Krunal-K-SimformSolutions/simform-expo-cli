@@ -71,6 +71,7 @@ Podfile.lock
 .env.development
 .env.production
 .env.staging
+.env.qa
 ios/tmp.xcconfig
 
 # Ignore native Android and iOS build folders in Expo
