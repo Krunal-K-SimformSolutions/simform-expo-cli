@@ -1,4 +1,5 @@
-import { stringBuilder, StringData, stringFormat } from './StringUtils';
+import { stringBuilder, stringFormat } from './StringUtils.js';
+import type { StringData } from './StringUtils.js';
 
 /**
  * Logs styled text to the console using the chalk library.
@@ -17,8 +18,10 @@ import { stringBuilder, StringData, stringFormat } from './StringUtils';
  */
 export const logger = (data: StringData | Array<StringData>) => {
   if (Array.isArray(data)) {
+    // eslint-disable-next-line no-restricted-syntax
     console.log(stringBuilder(data));
   } else {
+    // eslint-disable-next-line no-restricted-syntax
     console.log(stringFormat(data));
   }
 };

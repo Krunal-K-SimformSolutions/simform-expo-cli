@@ -1,3 +1,6 @@
+/**
+ *
+ */
 export const GitIgnoreTemplate = (): string => {
   return `
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
@@ -69,8 +72,7 @@ Podfile.lock
 # react-native-config codegen
 .env
 .env.development
-.env.production
-.env.staging
+.env.preview
 ios/tmp.xcconfig
 
 # Ignore native Android and iOS build folders in Expo

@@ -1,22 +1,31 @@
+/**
+ *
+ */
 export const TsConfigTemplate = (): string => {
   return `
     {
-      "extends": "expo/tsconfig.base",
       "compilerOptions": {
+        "target": "esnext",
+        "lib": ["esnext"],
+        "jsx": "react-native",
         "experimentalDecorators": true,
-        "types": [],
-        "baseUrl": "./",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "typeRoots": ["@types", "node"],
+        "resolveJsonModule": true,
+        "allowJs": true,
+        "noEmit": true,
+        "importHelpers": true,
+        "ignoreDeprecations": "5.0",
+        "isolatedModules": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
         "strict": true,
-        "paths": {
-          "@/*": [
-            "./*"
-          ],
-          "@types/*": ["@types/*"]
-        },
-        "skipDefaultLibCheck": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
         "skipLibCheck": true
       },
-      "moduleSuffixes": [".d", ""],
       "include": [
         "**/*.ts",
         "**/*.tsx",
@@ -32,7 +41,8 @@ export const TsConfigTemplate = (): string => {
         "babel.config.js",
         "metro.config.js",
         "jest.config.js"
-      ]
+      ],
+      "extends": "expo/tsconfig.base"
     }
   `;
 };

@@ -1,3 +1,6 @@
+/**
+ *
+ */
 export const LeftHookConfigTemplate = (): string => {
   return `
     {

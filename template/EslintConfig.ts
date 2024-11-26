@@ -1,44 +1,146 @@
+/**
+ *
+ */
 export const EslintConfigTemplate = (): string => {
   return `
-    import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin';
-    import typescriptEslintParser from '@typescript-eslint/parser';
-    import importPlugin from 'eslint-plugin-import';
-    import jsdocPlugin from 'eslint-plugin-jsdoc';
+    import path from 'node:path';
+    import { fileURLToPath } from 'node:url';
+    import { fixupConfigRules, fixupPluginRules } from '@eslint/compat';
+    import { FlatCompat } from '@eslint/eslintrc';
+    import js from '@eslint/js';
+    import typescriptEslint from '@typescript-eslint/eslint-plugin';
+    import tsParser from '@typescript-eslint/parser';
+    import eslintComments from 'eslint-plugin-eslint-comments';
+    import _import from 'eslint-plugin-import';
+    import jest from 'eslint-plugin-jest';
+    import jsDoc from 'eslint-plugin-jsdoc';
+    import prettier from 'eslint-plugin-prettier';
+    import react from 'eslint-plugin-react';
+    import reactHooks from 'eslint-plugin-react-hooks';
+    import reactNative from 'eslint-plugin-react-native';
     import globals from 'globals';
 
-    const OFF = 'off';
-    const WARN = 'warn';
-    const ERROR = 'error';
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const compat = new FlatCompat({
+      baseDirectory: __dirname,
+      recommendedConfig: js.configs.recommended,
+      allConfig: js.configs.all
+    });
 
     export default [
-      // Base configuration
       {
-        files: ['**/*.js', '**/*.jsx'], // Target JavaScript and JSX files
-        ignores: ['node_modules/**', 'dist/**', 'build/**', 'eslint.config.js'], // Ignore common directories
-        languageOptions: {
-          ecmaVersion: 2023, // Enable modern ECMAScript features
-          sourceType: 'module', // Use ES modules
-          globals: globals.browser
-        },
+        ignores: [
+          '**/node_modules',
+          '**/coverage',
+          '**/babel.config.js',
+          '**/metro.config.js',
+          '**/jest.config.js',
+          '**/eslint.config.mjs'
+        ]
+      },
+      ...fixupConfigRules(
+        compat.extends(
+          // 'expo',
+          'plugin:react-native/all',
+          'eslint:recommended',
+          'prettier',
+          'plugin:prettier/recommended',
+          'plugin:react/recommended',
+          'plugin:react-hooks/recommended',
+          'plugin:import/typescript',
+          'plugin:import/errors',
+          'plugin:import/warnings',
+          'eslint-config-prettier',
+          'plugin:@typescript-eslint/recommended'
+        )
+      ),
+      {
         plugins: {
-          jsdoc: jsdocPlugin,
-          import: importPlugin
+          '@typescript-eslint': fixupPluginRules(typescriptEslint),
+          'eslint-comments': eslintComments,
+          react: fixupPluginRules(react),
+          'react-hooks': fixupPluginRules(reactHooks),
+          'react-native': fixupPluginRules(reactNative),
+          prettier: fixupPluginRules(prettier),
+          jest,
+          import: fixupPluginRules(_import),
+          jsd: fixupPluginRules(jsDoc)
+        },
+        languageOptions: {
+          globals: {
+            ...globals.browser,
+            ...globals.jest,
+            ...jest.environments.globals.globals,
+            ...reactNative.environments['react-native']['react-native'],
+            __DEV__: true,
+            __dirname: false,
+            __fbBatchedBridgeConfig: false,
+            alert: false,
+            cancelAnimationFrame: false,
+            cancelIdleCallback: false,
+            clearImmediate: true,
+            clearInterval: false,
+            clearTimeout: false,
+            console: false,
+            document: false,
+            escape: false,
+            Event: false,
+            EventTarget: false,
+            exports: false,
+            fetch: false,
+            FormData: false,
+            global: false,
+            Map: true,
+            module: false,
+            navigator: false,
+            process: false,
+            Promise: true,
+            requestAnimationFrame: true,
+            requestIdleCallback: true,
+            require: false,
+            Set: true,
+            setImmediate: true,
+            setInterval: false,
+            setTimeout: false,
+            window: false,
+            XMLHttpRequest: false
+          },
+
+          parser: tsParser,
+          ecmaVersion: 'latest',
+          sourceType: 'module'
+        },
+        settings: {
+          react: {
+            version: 'detect'
+          },
+          'import/ignore': ['react-native']
         },
         rules: {
-          // general
-          'global-require': OFF,
-          'no-plusplus': OFF,
-          'no-cond-assign': OFF,
-          'max-classes-per-file': [ERROR, 10],
-          'no-shadow': OFF,
-          'no-undef': OFF,
-          'no-bitwise': OFF,
-          'no-param-reassign': OFF,
-          'no-use-before-define': OFF,
-          'linebreak-style': [ERROR, 'unix'],
-          semi: [ERROR, 'always'],
+          'prettier/prettier': [
+            'error',
+            {},
+            {
+              usePrettierrc: true
+            }
+          ],
+
+          indent: 'off',
+          'global-require': 'off',
+          'no-plusplus': 'off',
+          'no-cond-assign': 'off',
+          'max-classes-per-file': ['error', 10],
+          'no-shadow': 'off',
+          'no-undef': 'off',
+          'no-bitwise': 'off',
+          'no-param-reassign': 'off',
+          'no-use-before-define': 'off',
+          'linebreak-style': ['error', 'unix'],
+          semi: ['error', 'always'],
+
           'comma-dangle': [
-            ERROR,
+            'error',
             {
               arrays: 'never',
               objects: 'never',
@@ -47,19 +149,22 @@ export const EslintConfigTemplate = (): string => {
               functions: 'ignore'
             }
           ],
-          'object-curly-spacing': [ERROR, 'always'],
-          'eol-last': [ERROR, 'always'],
-          'no-console': OFF,
+
+          'object-curly-spacing': ['error', 'always'],
+          'eol-last': ['error', 'always'],
+          'no-console': 'off',
+
           'no-restricted-syntax': [
-            WARN,
+            'warn',
             {
               selector:
                 "CallExpression[callee.object.name='console'][callee.property.name!=/^(warn|error|info|trace|disableYellowBox|tron)$/]",
               message: 'Unexpected property on console object was called'
             }
           ],
-          'jsdoc/require-jsdoc': [
-            WARN,
+
+          'jsd/require-jsdoc': [
+            'warn',
             {
               require: {
                 FunctionDeclaration: true,
@@ -70,15 +175,54 @@ export const EslintConfigTemplate = (): string => {
               }
             }
           ],
-          eqeqeq: [WARN, 'always'],
-          quotes: [ERROR, 'single', { avoidEscape: true, allowTemplateLiterals: false }],
 
-          // imports
-          'import/extensions': OFF,
-          'import/prefer-default-export': OFF,
-          'import/no-cycle': OFF,
+          eqeqeq: ['warn', 'always'],
+
+          quotes: [
+            'error',
+            'single',
+            {
+              avoidEscape: true,
+              allowTemplateLiterals: false
+            }
+          ],
+
+          '@typescript-eslint/no-shadow': 'error',
+          '@typescript-eslint/no-use-before-define': 'error',
+          '@typescript-eslint/no-unused-vars': [
+            'error',
+            {
+              args: 'all',
+              argsIgnorePattern: '^_',
+              caughtErrors: 'all',
+              caughtErrorsIgnorePattern: '^_',
+              destructuredArrayIgnorePattern: '^_',
+              varsIgnorePattern: '^_',
+              ignoreRestSiblings: true
+            }
+          ],
+          '@typescript-eslint/ban-ts-ignore': 'off',
+          '@typescript-eslint/no-explicit-any': 'off',
+          '@typescript-eslint/no-require-imports': 'off',
+          '@typescript-eslint/no-var-requires': 'warn',
+          '@typescript-eslint/consistent-type-imports': 'error',
+          '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+
+          '@typescript-eslint/no-this-alias': [
+            'error',
+            {
+              allowDestructuring: true,
+              allowedNames: ['that']
+            }
+          ],
+
+          '@typescript-eslint/indent': 'off',
+          'import/extensions': 'off',
+          'import/prefer-default-export': 'off',
+          'import/no-cycle': 'off',
+
           'import/order': [
-            ERROR,
+            'error',
             {
               groups: [
                 'builtin',
@@ -97,65 +241,59 @@ export const EslintConfigTemplate = (): string => {
               warnOnUnassignedImports: true
             }
           ],
-          'import/no-unresolved': [ERROR, { commonjs: true, amd: true }],
-          'import/named': ERROR,
-          'import/namespace': ERROR,
-          'import/default': ERROR,
-          'import/export': ERROR,
-          'import/no-extraneous-dependencies': [ERROR, { devDependencies: true }]
-        }
-      },
 
-      // TypeScript-specific configuration
-      {
-        files: ['**/*.ts', '**/*.tsx'], // Target TypeScript files
-        languageOptions: {
-          parser: typescriptEslintParser, // Use TypeScript parser
-          // tsconfigRootDir: __dirname, // Set root directory for TypeScript
-          globals: globals.browser,
-          parserOptions: {
-            ecmaVersion: 2023,
-            sourceType: 'module',
-            ecmaFeatures: {
-              jsx: true
-            },
-            project: './tsconfig.json' // Point to your TypeScript configuration
-          }
-        },
-        plugins: {
-          '@typescript-eslint': typescriptEslintPlugin
-        },
-        rules: {
-          ...typescriptEslintPlugin.configs.recommended.rules,
-          '@typescript-eslint/no-shadow': [ERROR],
-          '@typescript-eslint/no-use-before-define': [ERROR],
-          '@typescript-eslint/no-unused-vars': ERROR,
-          '@typescript-eslint/consistent-type-definitions': [ERROR, 'interface']
-        }
-      },
+          'import/no-unresolved': [
+            'error',
+            {
+              commonjs: true,
+              amd: true
+            }
+          ],
 
-      // React-specific configuration
-      {
-        files: ['**/*.jsx', '**/*.tsx'], // Target React files
-        plugins: {
-          react: 'eslint-plugin-react'
-        },
-        rules: {
-          // react hooks
-          'react-hooks/exhaustive-deps': ERROR,
-          'react-hooks/rules-of-hooks': ERROR,
+          'import/named': 'error',
+          'import/namespace': 'error',
+          'import/default': 'error',
+          'import/export': 'error',
 
-          // react
-          'react/jsx-props-no-spreading': OFF,
-          'react/jsx-filename-extension': [ERROR, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
-          'react/no-unescaped-entities': [ERROR, { forbid: ['>', '"', '}'] }],
-          'react/prop-types': [ERROR, { ignore: ['action', 'dispatch', 'nav', 'navigation'] }],
-          'react/display-name': OFF,
-          'react/jsx-boolean-value': ERROR,
-          'react/jsx-no-undef': ERROR,
-          'react/jsx-uses-react': ERROR,
+          'import/no-extraneous-dependencies': [
+            'error',
+            {
+              devDependencies: true
+            }
+          ],
+
+          'react-hooks/exhaustive-deps': 'error',
+          'react-hooks/rules-of-hooks': 'error',
+          'react/jsx-props-no-spreading': 'off',
+
+          'react/jsx-filename-extension': [
+            'error',
+            {
+              extensions: ['.js', '.jsx', '.ts', '.tsx']
+            }
+          ],
+
+          'react/no-unescaped-entities': [
+            'error',
+            {
+              forbid: ['>', '"', '}']
+            }
+          ],
+
+          'react/prop-types': [
+            'error',
+            {
+              ignore: ['action', 'dispatch', 'nav', 'navigation']
+            }
+          ],
+
+          'react/display-name': 'off',
+          'react/jsx-boolean-value': 'error',
+          'react/jsx-no-undef': 'error',
+          'react/jsx-uses-react': 'error',
+
           'react/jsx-sort-props': [
-            ERROR,
+            'error',
             {
               callbacksLast: true,
               shorthandFirst: true,
@@ -163,14 +301,19 @@ export const EslintConfigTemplate = (): string => {
               noSortAlphabetically: true
             }
           ],
-          'react/jsx-pascal-case': ERROR,
-          'react/no-children-prop': OFF,
 
-          // react-native specific rules
-          'react-native/no-unused-styles': ERROR,
-          'react-native/no-inline-styles': ERROR,
-          'react-native/no-color-literals': ERROR,
-          'react-native/no-raw-text': ERROR
+          'react/jsx-pascal-case': 'error',
+          'react/no-children-prop': 'off',
+          'react-native/no-unused-styles': 'error',
+          'react-native/no-inline-styles': 'error',
+          'react-native/no-color-literals': 'error',
+
+          'react-native/no-raw-text': [
+            'error',
+            {
+              skip: ['CustomText', 'Text']
+            }
+          ]
         }
       }
     ];

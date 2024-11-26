@@ -1,5 +1,8 @@
-import { QuestionAnswer } from '@/questions';
+import { QuestionAnswer, AppConstant } from '../src/index.js';
 
+/**
+ *
+ */
 export const EasConfigTemplate = (): string => {
   const variables = QuestionAnswer.instance;
 
@@ -11,10 +14,15 @@ export const EasConfigTemplate = (): string => {
       (env) => `"${env}": {
           "extends": "base",
           "distribution": "internal",
-          "developmentClient": true,
-          "ios": {
-            "simulator": true
-          },
+          ${
+            variables.isSupportDevelopmentEnv(AppConstant.SetupEnv.Development)
+              ? ` "developmentClient": true,
+                  "ios": {
+                    "simulator": true
+                  },
+                `
+              : ''
+          }
           "env": {
             "NODE_ENV": "${env}"
           }
