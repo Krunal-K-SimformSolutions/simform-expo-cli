@@ -1,4 +1,4 @@
-import { stringBuilder, StringData, stringFormat } from './StringUtils';
+import { stringBuilder, StringData, stringFormat } from './StringUtils.js';
 
 /**
  * Logs styled text to the console using the chalk library.

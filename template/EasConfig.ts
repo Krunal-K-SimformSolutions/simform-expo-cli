@@ -1,4 +1,4 @@
-import { QuestionAnswer } from '@/questions';
+import { QuestionAnswer } from '../src/index.js';
 
 export const EasConfigTemplate = (): string => {
   const variables = QuestionAnswer.instance;
